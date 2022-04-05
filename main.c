@@ -13,8 +13,6 @@ void drawBatteryScreen(FILE *fp, FILE *fpStatus) {
 	char batteryBar[255] = "";
 
 	char blank = '.', block = '#';
-	fp = fopen("/sys/class/power_supply/BAT1/capacity", "r");
-	fpStatus = fopen("/sys/class/power_supply/BAT1/status", "r");
 
 	fscanf(fp, "%s", battery);
 	fscanf(fpStatus, "%s", batteryStatus);
@@ -35,6 +33,22 @@ void drawBatteryScreen(FILE *fp, FILE *fpStatus) {
 }
 
 int main() {
+	FILE *fp, *fpStatus;
+
+	fp = fopen("/sys/class/power_supply/BAT1/capacity", "r");
+
+	if (fp == NULL) {
+		printf("Error opening battery capacity\n");
+		exit(1);
+	}
+
+	fpStatus = fopen("/sys/class/power_supply/BAT1/status", "r");
+
+	if (fpStatus == NULL) {
+		printf("Error opening battery status\n");
+		exit(1);
+	}
+
 	initscr();
 	start_color();
 	
@@ -44,9 +58,7 @@ int main() {
 	init_pair(4, COLOR_BLUE, COLOR_BLACK);
 	init_pair(5, COLOR_WHITE, COLOR_BLACK);
 	attron(COLOR_PAIR(1));
-	
-	
-	FILE *fp, *fpStatus;
+
 	int key;
 	do {
 		wrefresh(stdscr);
@@ -76,8 +88,7 @@ int main() {
 	} while (key != 'q');
 	
 	endwin();
-/*
 	fclose(fp);
-	fclose(fpStatus);*/
+	fclose(fpStatus);
 	return 0;
 }
