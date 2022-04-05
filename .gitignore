@@ -1,0 +1,6 @@
+/.tmp
+/battery.txt
+/get-battery.sh
+/.main.c.swo
+/.main.c.swp
+/tty-battery
